@@ -7,17 +7,34 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
 
 
-DATA_PATH = "/Users/patrickflanagan/Desktop/DS4400/FinalProject/openpowerlifting-2026-03-14/openpowerlifting-2026-03-14-dfb517af.csv"
+from pathlib import Path
+import pandas as pd
+
+#repo root = parent of src/
+REPO_ROOT = Path(__file__).resolve().parent.parent
+DATA_DIR = REPO_ROOT / "data"
+DATA_PATH = DATA_DIR / "openpowerlifting.csv"
 
 FEATURES = [
     "Squat1Kg",
     "Bench1Kg",
     "Deadlift1Kg",
     "BodyweightKg",
-    "Age"
+    "Age",
 ]
-
 TARGET = "TotalKg"
+
+
+def load_data(path: Path = DATA_PATH) -> pd.DataFrame:
+    if not path.exists():
+        raise FileNotFoundError(
+            f"Dataset not found at {path}. Run data_loader.py first."
+        )
+
+    cols = FEATURES + [TARGET]
+    df = pd.read_csv(path, usecols=cols)
+    df = df.dropna()
+    return df
 
 def add_intercept(X):
     return np.column_stack([np.ones(X.shape[0]), X])
@@ -52,16 +69,16 @@ def main():
 
     print("Dataset size:", df.shape)
 
-    # Extract X and y
+    #extracts X and y
     X = df[FEATURES].values
     y = df[TARGET].values
 
-    # Train/test split
+    #train/test split
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42
     )
 
-    # Scale
+    #scale
     scaler = StandardScaler()
     X_train_s = scaler.fit_transform(X_train)
     X_test_s = scaler.transform(X_test)
@@ -107,16 +124,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-# import os
-# import pandas as pd
-
-# DATA_PATH = "/Users/patrickflanagan/Desktop/DS4400/FinalProject/openpowerlifting-2026-03-14/openpowerlifting-2026-03-14-dfb517af.csv"
-
-# print("Exists:", os.path.exists(DATA_PATH))
-# print("Is file:", os.path.isfile(DATA_PATH))
-# print("Is dir:", os.path.isdir(DATA_PATH))
-
-# if os.path.isfile(DATA_PATH):
-#     df = pd.read_csv(DATA_PATH, nrows=5)
-#     print(df.columns.tolist())
