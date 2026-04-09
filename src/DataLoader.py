@@ -1,4 +1,4 @@
-import os, zipfile, glob, requests
+import os, zipfile, glob, requests, shutil
 
 #checking if the user already has a csv file
 if not os.path.exists("data/openpowerlifting.csv"):
@@ -20,6 +20,8 @@ if not os.path.exists("data/openpowerlifting.csv"):
     os.remove("data.zip")
     
     #move CSV to a clean path
-    csv_path = glob.glob("data/**/*.csv", recursive=True)[0]
-    os.rename(csv_path, "data/openpowerlifting.csv")
+    csv_files = glob.glob("data/**/*.csv", recursive=True)
+    if len(csv_files) != 1:
+        raise Exception(f"Expected 1 CSV, found {len(csv_files)}: {csv_files}")
+    shutil.move(csv_files[0], "data/openpowerlifting.csv")
     print("Done!")

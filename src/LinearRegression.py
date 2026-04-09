@@ -34,6 +34,7 @@ def load_data(path: Path = DATA_PATH) -> pd.DataFrame:
     cols = FEATURES + [TARGET]
     df = pd.read_csv(path, usecols=cols)
     df = df.dropna()
+    df = df[(df[["Squat1Kg", "Bench1Kg", "Deadlift1Kg"]] > 0).all(axis=1)]
     return df
 
 def add_intercept(X):
@@ -49,19 +50,6 @@ def linear_regression_closed_form(X, y):
 def predict_linear(X, theta):
     Xb = add_intercept(X)
     return Xb @ theta
-
-
-def load_data(path):
-    # Only load columns you need
-    cols = FEATURES + [TARGET]
-
-    df = pd.read_csv(path, usecols=cols)
-
-    # Drop missing values
-    df = df.dropna()
-
-    return df
-
 
 def main():
     print("Loading data...")
