@@ -2,6 +2,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, confusion_matrix
 from pathlib import Path
 import numpy as np
+from visuals import plot_confusion_matrix, plot_feature_importance, plot_roc_curve
 
 from data_utils import (
     prepare_data,
@@ -25,6 +26,7 @@ def main():
     clf.fit(X_train, y_train_labels)
 
     y_pred = clf.predict(X_test)
+    y_prob = clf.predict_proba(X_test)[:, 1]
     print(classification_report(y_test_labels, y_pred))
     print(confusion_matrix(y_test_labels, y_pred))
 
@@ -36,6 +38,12 @@ def main():
     print("\n=== Feature Importance ===")
     for f, imp in zip(FEATURES, clf.feature_importances_):
         print(f"{f}: {imp:.4f}")
+    
+    print("\nGenerating plots...")
+    
+    plot_confusion_matrix(y_test_labels, y_pred, "rf_confusion_matrix.png")
+    plot_feature_importance(FEATURES, clf.feature_importances_)
+    plot_roc_curve(y_test_labels, y_prob, "rf_roc_curve.png")
 
 if __name__ == "__main__":
     main()

@@ -5,6 +5,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LinearRegression, Ridge
 from sklearn.metrics import mean_squared_error, r2_score
+from visuals import plot_pred_vs_actual, plot_residuals
 from pathlib import Path
 import pandas as pd
 
@@ -41,6 +42,12 @@ def main():
 
     y_train_pred = model.predict(X_train_s)
     y_test_pred = model.predict(X_test_s)
+
+    #visualization
+    print("\nGenerating plots...")
+
+    plot_pred_vs_actual(y_test, y_test_pred)
+    plot_residuals(y_test, y_test_pred)
 
     print("\n=== Ridge Sklearn Results ===")
     print("Train MSE:", mean_squared_error(y_train, y_train_pred))

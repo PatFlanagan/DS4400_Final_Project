@@ -3,6 +3,7 @@ from sklearn.metrics import classification_report, confusion_matrix, accuracy_sc
 import numpy as np
 import pandas as pd
 from pathlib import Path
+from visuals import plot_confusion_matrix, plot_roc_curve
 from data_utils import (
     prepare_data,
     FEATURES
@@ -35,6 +36,7 @@ def main():
     svm_model.fit(X_train, y_train_labels)
 
     y_pred = svm_model.predict(X_test)
+    y_score = svm_model.decision_function(X_test)
 
     print("\n=== SVM Results ===")
     print("Accuracy:", accuracy_score(y_test_labels, y_pred))
@@ -44,6 +46,10 @@ def main():
 
     print("\nConfusion Matrix:")
     print(confusion_matrix(y_test_labels, y_pred))
+
+    print("\nGenerating plots...")
+    plot_confusion_matrix(y_test_labels, y_pred, "svm_confusion_matrix.png")
+    plot_roc_curve(y_test_labels, y_score, "svm_roc_curve.png")
 
 
 if __name__ == "__main__":
