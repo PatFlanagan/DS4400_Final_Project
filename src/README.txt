@@ -17,7 +17,15 @@ FinalProject/
   src/
     DataLoader.py
     linear_regression.py
-    (other models)
+    Random_Forest_Regression.py
+    Support_Vector_Machine.py
+    data_utils.py
+    visuals.py
+
+  outputs/
+    plots/
+    tables/
+
   data/
     (dataset information stored here, actual dataset is downloaded from DataLoader.py)
   README.txt
